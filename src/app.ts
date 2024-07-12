@@ -18,9 +18,9 @@ const init = () => {
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
 
-      app.use("/auth", authRoute);
-      app.use("/user", userRoute);
-      app.use("/post", postRoute);
+      app.use("/api/auth", authRoute);
+      app.use("/api/user", userRoute);
+      app.use("/api/post", postRoute);
       resolve(app);
     });
   });

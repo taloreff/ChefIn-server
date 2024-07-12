@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
+import { logger } from "../services/logger.service";
 
 class BaseController<ModelInterface>{
     model: mongoose.Model<ModelInterface>;
@@ -23,6 +24,7 @@ class BaseController<ModelInterface>{
                 }
             }
         } catch (err) {
+            logger.error(err)
             res.status(500).send(err.message);
         }
     }
@@ -33,6 +35,7 @@ class BaseController<ModelInterface>{
             const newUser = await this.model.create(user);
             res.status(201).json(newUser);
         } catch (err) {
+            logger.error(err)
             res.status(500).send(err.message);
         }
     }
@@ -47,6 +50,7 @@ class BaseController<ModelInterface>{
             );
             res.status(200).json(updatedUser);
         } catch (err) {
+            logger.error(err)
             res.status(500).send(err.message);
         }
     }
@@ -57,6 +61,7 @@ class BaseController<ModelInterface>{
             await this.model.findByIdAndDelete(user._id);
             res.status(200).send();
         } catch (err) {
+            logger.error(err)
             res.status(500).send(err.message);
         }
     }

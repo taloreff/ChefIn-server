@@ -3,6 +3,7 @@ import User, { IUser } from "../models/userModel"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Document } from "mongoose";
+import { logger } from "../services/logger.service";
 
 const register = async (req: Request, res: Response) => {
     const email = req.body.email;
@@ -20,6 +21,7 @@ const register = async (req: Request, res: Response) => {
         const newUser = await User.create({ email: email, password: hashedPassword });
         return res.send(newUser);
     } catch (err) {
+        logger.error(err)
         return res.status(400).send(err.message);
     }
 }
@@ -42,6 +44,7 @@ const generateTokens = async (user: Document<unknown, object, IUser> & IUser & R
             "refreshToken": refreshToken
         };
     } catch (err) {
+        logger.error(err)
         return null;
     }
 }
@@ -50,6 +53,7 @@ const login = async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
     if (email === undefined || password === undefined) {
+        logger.error("Email and password are required")
         return res.status(400).send("Email and password are required");
     }
 
@@ -71,6 +75,7 @@ const login = async (req: Request, res: Response) => {
         }
         return res.status(200).send(tokens);
     } catch (err) {
+        logger.error(err)
         return res.status(400).send(err.message);
     }
 }
@@ -98,11 +103,13 @@ const refresh = async (req: Request, res: Response) => {
             user.tokens = user.tokens.filter((token) => token !== refreshToken);
             const tokens = await generateTokens(user);
             if (tokens == null) {
+                logger.error("Error generating tokens")
                 return res.status(400).send("Error generating tokens");
             }
             return res.status(200).send(tokens);
         });
     } catch (err) {
+        logger.error(err)
         return res.status(400).send(err.message);
     }
 }
@@ -137,6 +144,7 @@ const logout = async (req: Request, res: Response) => {
             return res.status(200).send();
         });
     } catch (err) {
+        logger.error(err)
         return res.status(400).send(err.message);
     }
     res.send("logout");
@@ -151,6 +159,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     }
     jwt.verify(token, process.env.TOKEN_SECRET, (err, data: jwt.JwtPayload) => {
         if (err) {
+            logger.error(err)
             return res.sendStatus(401);
         }
         const id = data._id;
