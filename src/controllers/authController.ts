@@ -12,14 +12,20 @@ const register = async (req: Request, res: Response) => {
         return res.status(400).send("Email and password are required");
     }
     try {
-        const user = await User.findOne({ email: email });
-        if (user) {
+        const existingUser = await User.findOne({ email: email });
+        if (existingUser) {
             return res.status(400).send("User already exists");
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({ email: email, password: hashedPassword });
-        return res.send(newUser);
+        const newUser = await User.create({ email: email, password: hashedPassword }) as Document<unknown, object, IUser> & IUser & Required<{ _id: string }>;
+        
+        const tokens = await generateTokens(newUser);
+        if (tokens == null) {
+            return res.status(400).send("Error generating tokens");
+        }
+
+        return res.status(200).send({ user: newUser, ...tokens });
     } catch (err) {
         logger.error(err);
         return res.status(400).send(err.message);
@@ -71,7 +77,7 @@ const login = async (req: Request, res: Response) => {
         if (tokens == null) {
             return res.status(400).send("Error generating tokens");
         }
-        return res.status(200).send(tokens);
+        return res.status(200).send({ user, ...tokens });
     } catch (err) {
         logger.error(err);
         return res.status(400).send(err.message);
