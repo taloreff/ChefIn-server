@@ -1,3 +1,4 @@
+// src/models/postModel.ts
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IPost extends Document {
@@ -6,6 +7,7 @@ export interface IPost extends Document {
     profileImgUrl: string;
     title: string;
     description: string;
+    image: string;  
     labels: string[];
 }
 
@@ -28,6 +30,10 @@ const PostSchema: Schema = new Schema({
         required: true,
     },
     description: {
+        type: String,
+        required: true,
+    },
+    image: {  
         type: String,
         required: true,
     },

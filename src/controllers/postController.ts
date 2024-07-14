@@ -1,6 +1,7 @@
+// src/controllers/postController.ts
 import Post, { IPost } from "../models/postModel";
 import BaseController from "./baseController";
-import { Response } from "express";
+import { Response, Request } from "express";
 import { AuthRequest } from "./authController";
 import User from "../models/userModel";
 import { logger } from "../services/logger.service";
@@ -23,9 +24,21 @@ class PostController extends BaseController<IPost> {
                 userId: user._id,
                 username: user.username,
                 profileImgUrl: user.profileImgUrl,
+                image: req.body.image,
                 ...req.body
             });
             res.status(201).json(newPost);
+        } catch (err) {
+            logger.error(err);
+            res.status(500).send(err.message);
+        }
+    }
+
+    async get(req: Request, res: Response): Promise<void> {
+        try {
+            const filter = req.query as any;
+            const posts = await this.model.find(filter);
+            res.status(200).json(posts);
         } catch (err) {
             logger.error(err);
             res.status(500).send(err.message);
