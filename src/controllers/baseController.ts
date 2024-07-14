@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { logger } from "../services/logger.service";
 
-class BaseController<ModelInterface>{
+class BaseController<ModelInterface> {
     model: mongoose.Model<ModelInterface>;
 
     constructor(model: mongoose.Model<ModelInterface>) {
@@ -11,17 +11,17 @@ class BaseController<ModelInterface>{
 
     async get(req: Request, res: Response): Promise<void> {
         try {
-            if (req.params.id != null) {
-                const users = await this.model.findById(req.params.id);
-                res.status(200).send(users);
-            } else {
-                if (req.query.name != null) {
-                    const users = await this.model.find({ name: req.query.name });
-                    res.status(200).send(users);
-                } else {
-                    const users = await this.model.find();
-                    res.status(200).send(users);
+            if (req.params.id) {
+                const document = await this.model.findById(req.params.id);
+                if (!document) {
+                    res.status(404).send("Document not found");
+                    return;
                 }
+                res.status(200).json(document);
+            } else {
+                const filter = req.query as mongoose.FilterQuery<ModelInterface>;
+                const documents = await this.model.find(filter);
+                res.status(200).json(documents);
             }
         } catch (err) {
             logger.error(err);
@@ -30,10 +30,10 @@ class BaseController<ModelInterface>{
     }
 
     async post(req: Request, res: Response): Promise<void> {
-        const user = req.body;
+        const document = req.body;
         try {
-            const newUser = await this.model.create(user);
-            res.status(201).json(newUser);
+            const newDocument = await this.model.create(document);
+            res.status(201).json(newDocument);
         } catch (err) {
             logger.error(err);
             res.status(500).send(err.message);
@@ -41,14 +41,14 @@ class BaseController<ModelInterface>{
     }
 
     async put(req: Request, res: Response): Promise<void> {
-        const user = req.body;
+        const document = req.body;
         try {
-            const updatedUser = await this.model.findByIdAndUpdate(
-                user._id,
-                user,
+            const updatedDocument = await this.model.findByIdAndUpdate(
+                document._id,
+                document,
                 { new: true }
             );
-            res.status(200).json(updatedUser);
+            res.status(200).json(updatedDocument);
         } catch (err) {
             logger.error(err);
             res.status(500).send(err.message);
@@ -56,9 +56,9 @@ class BaseController<ModelInterface>{
     }
 
     async delete(req: Request, res: Response): Promise<void> {
-        const user = req.body;
+        const { id } = req.params;
         try {
-            await this.model.findByIdAndDelete(user._id);
+            await this.model.findByIdAndDelete(id);
             res.status(200).send();
         } catch (err) {
             logger.error(err);
