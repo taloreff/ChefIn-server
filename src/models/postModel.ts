@@ -9,6 +9,18 @@ export interface IPost extends Document {
     description: string;
     image: string;  
     labels: string[];
+    reviews: {
+        user: string;
+        rating: number;
+        comment: string;
+    }[];
+    overview: string;
+    whatsIncluded: string[];
+    meetingPoint: {
+        address: string;
+        lat: number;
+        lng: number;
+    };
 }
 
 const PostSchema: Schema = new Schema({
@@ -41,6 +53,24 @@ const PostSchema: Schema = new Schema({
         type: [String],
         required: true,
     },
+    reviews: [{
+        user: String,
+        rating: Number,
+        comment: String
+    }],
+    overview: {
+        type: String,
+        required: true,
+    },
+    whatsIncluded: {
+        type: [String],
+        required: true,
+    },
+    meetingPoint: {
+        address: String,
+        lat: Number,
+        lng: Number
+    }
 });
 
 export default mongoose.model<IPost>("Post", PostSchema);
