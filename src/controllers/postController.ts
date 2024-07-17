@@ -12,6 +12,8 @@ class PostController extends BaseController<IPost> {
 
     async post(req: AuthRequest, res: Response): Promise<void> {
         try {
+            const { title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded } = req.body;
+            console.log("creating post")
             const userId = req.user._id;
             const user = await User.findById(userId);
             if (!user) {
@@ -23,8 +25,7 @@ class PostController extends BaseController<IPost> {
                 userId: user._id,
                 username: user.username,
                 profileImgUrl: user.profileImgUrl,
-                image: req.body.image,
-                ...req.body
+                title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded
             });
             res.status(201).json(newPost);
         } catch (err) {
@@ -67,6 +68,25 @@ class PostController extends BaseController<IPost> {
             console.log("Error saving post:", err);
             logger.error(err);
             res.status(500).send(err.message);
+        }
+    }
+
+    async getPlaceDetails(req: Request, res: Response): Promise<void> {
+        const { placeId } = req.query;
+        if (!placeId) {
+            res.status(400).send('placeId query parameter is required');
+            return;
+        }
+        const apiKey = 'AIzaSyB24fmoFy0PfYJeqW1F7Ida3Ok3IlwDZUw';
+        try {
+            console.log("fetching place details")
+            const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${apiKey}`);
+            const data = await response.json();
+            console.log("place details fetched ", data)
+            res.json(data);
+        } catch (error) {
+            logger.error(error);
+            res.status(500).send('Error fetching place details');
         }
     }
 }

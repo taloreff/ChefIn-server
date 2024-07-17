@@ -3,6 +3,7 @@ const router = express.Router();
 import PostController from "../controllers/postController";
 import { authMiddleware } from "../controllers/authController";
 
+router.get("/place-details", PostController.getPlaceDetails.bind(PostController));
 router.get("/myposts", authMiddleware, PostController.get.bind(PostController));
 router.get("/:id", PostController.get.bind(PostController));
 router.get("/", PostController.get.bind(PostController));

@@ -7,3 +7,20 @@
 13.7.2024, 14:58:22 - ERROR - Invalid credentials 
 13.7.2024, 14:58:25 - ERROR - Invalid credentials 
 13.7.2024, 14:58:39 - ERROR - Invalid credentials 
+17.7.2024, 17:33:19 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 17:34:45 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 17:35:15 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 17:40:20 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 17:40:23 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:51:52 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:52:10 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:53:24 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:54:48 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:57:20 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 18:57:40 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 19:08:25 - ERROR - CastError: Cast to ObjectId failed for value "place-details" (type string) at path "_id" for model "Post" 
+17.7.2024, 19:19:05 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 19:21:43 - ERROR - TokenExpiredError: jwt expired 
+17.7.2024, 19:22:40 - ERROR - ValidationError: userId: Cast to ObjectId failed for value "" (type string) at path "userId" because of "BSONError", _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError", username: Path `username` is required. 
+17.7.2024, 19:24:40 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
+17.7.2024, 19:26:31 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
