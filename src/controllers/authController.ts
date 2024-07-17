@@ -147,7 +147,6 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     }
     jwt.verify(token, process.env.TOKEN_SECRET!, (err, data: jwt.JwtPayload) => {
         if (err) {
-            console.log("its failing here");
             logger.error(err);
             return res.sendStatus(401);
         }

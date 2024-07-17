@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { logger } from "../services/logger.service";
+import { AuthRequest } from "../controllers/authController"; 
 
 class BaseController<ModelInterface> {
     model: mongoose.Model<ModelInterface>;
@@ -9,7 +10,7 @@ class BaseController<ModelInterface> {
         this.model = model;
     }
 
-    async get(req: Request, res: Response): Promise<void> {
+    async get(req: AuthRequest, res: Response): Promise<void> {
         try {
             if (req.params.id) {
                 const document = await this.model.findById(req.params.id);
@@ -18,6 +19,12 @@ class BaseController<ModelInterface> {
                     return;
                 }
                 res.status(200).json(document);
+            } else if (req.user) {
+                const userId = new Types.ObjectId(req.user._id);
+                console.log(`Searching for documents with userId: ${userId}`);
+                const documents = await this.model.find({ userId });
+                console.log(`Found documents: ${JSON.stringify(documents)}`);
+                res.status(200).json(documents);
             } else {
                 const filter = req.query as mongoose.FilterQuery<ModelInterface>;
                 const documents = await this.model.find(filter);
@@ -29,7 +36,7 @@ class BaseController<ModelInterface> {
         }
     }
 
-    async post(req: Request, res: Response): Promise<void> {
+    async post(req: AuthRequest, res: Response): Promise<void> {
         const document = req.body;
         try {
             const newDocument = await this.model.create(document);
@@ -40,7 +47,7 @@ class BaseController<ModelInterface> {
         }
     }
 
-    async put(req: Request, res: Response): Promise<void> {
+    async put(req: AuthRequest, res: Response): Promise<void> {
         const document = req.body;
         try {
             const updatedDocument = await this.model.findByIdAndUpdate(
@@ -55,7 +62,7 @@ class BaseController<ModelInterface> {
         }
     }
 
-    async delete(req: Request, res: Response): Promise<void> {
+    async delete(req: AuthRequest, res: Response): Promise<void> {
         const { id } = req.params;
         try {
             await this.model.findByIdAndDelete(id);
