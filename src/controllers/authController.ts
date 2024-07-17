@@ -8,9 +8,9 @@ import { logger } from '../services/logger.service';
 export type AuthRequest = Request & { user: { _id: string } };
 
 const register = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).send("Email and password are required");
+    const { email, password, username } = req.body;
+    if (!email || !password || !username) {
+        return res.status(400).send("Email, password, and username are required");
     }
     try {
         const existingUser = await User.findOne({ email });
@@ -19,7 +19,7 @@ const register = async (req: Request, res: Response) => {
         }
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({ email, password: hashedPassword }) as IUser & Document;
+        const newUser = await User.create({ email, password: hashedPassword, username }) as IUser & Document;
 
         const tokens = await generateTokens(newUser);
         if (!tokens) {
@@ -80,8 +80,8 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
-const refresh = async (req: Request, res: Response) => {
-    const refreshToken = extractToken(req);
+export const refresh = async (req: Request, res: Response) => {
+    const refreshToken = req.body.refreshToken;
     if (!refreshToken) {
         return res.sendStatus(401);
     }
@@ -107,6 +107,8 @@ const refresh = async (req: Request, res: Response) => {
         return res.status(400).send(err.message);
     }
 };
+
+
 
 const extractToken = (req: Request): string | null => {
     const authHeader = req.headers['authorization'];
@@ -141,10 +143,11 @@ const logout = async (req: Request, res: Response) => {
 export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const token = extractToken(req);
     if (!token) {
-        return res.sendStatus(401);
+        return res.status(401).json({ message: 'No token provided' });
     }
     jwt.verify(token, process.env.TOKEN_SECRET!, (err, data: jwt.JwtPayload) => {
         if (err) {
+            console.log("its failing here");
             logger.error(err);
             return res.sendStatus(401);
         }

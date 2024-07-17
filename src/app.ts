@@ -19,7 +19,7 @@ const init = () => {
     mongoose.connect(process.env.MONGO_URL).then(() => {
       const corsOptions = {
         origin: "*",
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE"],
       };
     
       app.use(cors(corsOptions));
