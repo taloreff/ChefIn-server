@@ -1,5 +1,4 @@
-// src/models/postModel.ts
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IPost extends Document {
     userId: mongoose.Types.ObjectId;
@@ -7,7 +6,7 @@ export interface IPost extends Document {
     profileImgUrl: string;
     title: string;
     description: string;
-    image: string;  
+    image: string;
     labels: string[];
     reviews: {
         user: string;
@@ -26,7 +25,7 @@ export interface IPost extends Document {
 const PostSchema: Schema = new Schema({
     userId: {
         type: mongoose.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
         required: true,
     },
     username: {
@@ -45,7 +44,7 @@ const PostSchema: Schema = new Schema({
         type: String,
         required: true,
     },
-    image: {  
+    image: {
         type: String,
         required: true,
     },
@@ -53,11 +52,22 @@ const PostSchema: Schema = new Schema({
         type: [String],
         required: true,
     },
-    reviews: [{
-        user: String,
-        rating: Number,
-        comment: String
-    }],
+    reviews: [
+        {
+            user: {
+                type: String,
+                required: true,
+            },
+            rating: {
+                type: Number,
+                required: true,
+            },
+            comment: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
     overview: {
         type: String,
         required: true,
@@ -69,8 +79,8 @@ const PostSchema: Schema = new Schema({
     meetingPoint: {
         address: String,
         lat: Number,
-        lng: Number
-    }
+        lng: Number,
+    },
 });
 
-export default mongoose.model<IPost>("Post", PostSchema);
+export default mongoose.model<IPost>('Post', PostSchema);
