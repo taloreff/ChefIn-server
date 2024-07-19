@@ -10,7 +10,7 @@ router.get("/:id", authMiddleware, userController.get.bind(userController));
 router.post("/", authMiddleware, userController.post.bind(userController));
 
 //put
-router.put("/", authMiddleware, userController.put.bind(userController));
+router.put("/:id", authMiddleware, userController.put.bind(userController));
 
 //delete
 router.delete("/", authMiddleware, userController.delete.bind(userController));

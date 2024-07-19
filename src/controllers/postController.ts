@@ -13,18 +13,10 @@ class PostController extends BaseController<IPost> {
     async post(req: AuthRequest, res: Response): Promise<void> {
         try {
             const { title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded } = req.body;
-            console.log("creating post")
             const userId = req.user._id;
-            const user = await User.findById(userId);
-            if (!user) {
-                res.status(404).send("User not found");
-                return;
-            }
 
             const newPost = await this.model.create({
-                userId: user._id,
-                username: user.username,
-                profileImgUrl: user.profileImgUrl,
+                userId: userId,
                 title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded
             });
             res.status(201).json(newPost);
@@ -38,7 +30,6 @@ class PostController extends BaseController<IPost> {
         try {
             const postId = req.params.id;
             const post = await this.model.findById(postId);
-            console.log("post found")
             if (!post) {
                 res.status(404).send("Post not found");
                 return;
@@ -46,7 +37,6 @@ class PostController extends BaseController<IPost> {
 
             const userId = req.user._id;
             const user = await User.findById(userId);
-            console.log("userfound")
             if (!user) {
                 res.status(404).send("User not found");
                 return;
@@ -60,12 +50,20 @@ class PostController extends BaseController<IPost> {
             };
 
             post.reviews.push(review);
-            console.log("post.userId", post.userId)
             const updatedPost = await post.save();
-            console.log("post saved")
             res.status(200).json(updatedPost);
         } catch (err) {
-            console.log("Error saving post:", err);
+            logger.error(err);
+            res.status(500).send(err.message);
+        }
+    }
+
+    async getMyPosts(req: AuthRequest, res: Response): Promise<void> {
+        try {
+            const userId = req.user._id;
+            const posts = await this.model.find({ userId }).populate('userId', 'username profileImgUrl');
+            res.status(200).json(posts);
+        } catch (err) {
             logger.error(err);
             res.status(500).send(err.message);
         }

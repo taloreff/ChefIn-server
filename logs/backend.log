@@ -24,3 +24,8 @@
 17.7.2024, 19:22:40 - ERROR - ValidationError: userId: Cast to ObjectId failed for value "" (type string) at path "userId" because of "BSONError", _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError", username: Path `username` is required. 
 17.7.2024, 19:24:40 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
 17.7.2024, 19:26:31 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
+18.7.2024, 0:20:20 - ERROR - TokenExpiredError: jwt expired 
+18.7.2024, 11:29:22 - ERROR - TokenExpiredError: jwt expired 
+19.7.2024, 11:31:32 - ERROR - TokenExpiredError: jwt expired 
+19.7.2024, 11:31:36 - ERROR - TokenExpiredError: jwt expired 
+19.7.2024, 11:31:38 - ERROR - TokenExpiredError: jwt expired 
