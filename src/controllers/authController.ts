@@ -7,31 +7,33 @@ import { logger } from '../services/logger.service';
 
 export type AuthRequest = Request & { user: { _id: string } };
 
-const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
+    logger.info("Registering user");
     const { email, password, username } = req.body;
     if (!email || !password || !username) {
-        return res.status(400).send("Email, password, and username are required");
+      return res.status(400).send("Email, password, and username are required");
     }
     try {
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).send("User already exists");
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await User.create({ email, password: hashedPassword, username }) as IUser & Document;
-
-        const tokens = await generateTokens(newUser);
-        if (!tokens) {
-            return res.status(400).send("Error generating tokens");
-        }
-
-        return res.status(200).send({ user: newUser, ...tokens });
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).send("User already exists");
+      }
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      const newUser = await User.create({ email, password: hashedPassword, username }) as IUser;
+      
+      const accessToken = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET!, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+      const refreshToken = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET!);
+  
+      newUser.tokens = newUser.tokens || [];
+      newUser.tokens.push(refreshToken);
+      await newUser.save();
+      logger.info(`User ${newUser._id} registered successfully`);
+      return res.status(200).send({ user: newUser, accessToken, refreshToken });
     } catch (err) {
-        logger.error(err);
-        return res.status(400).send(err.message);
+      return res.status(400).send(err.message);
     }
-};
+  };
 
 const generateTokens = async (user: IUser & Document): Promise<{ accessToken: string, refreshToken: string } | null> => {
     const accessToken = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET!, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });

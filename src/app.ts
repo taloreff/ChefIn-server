@@ -15,24 +15,25 @@ import bodyParser from "body-parser";
 
 env.config();
 
-const app = express();
+const app: Express = express();
 
-const init = () => {
-  const promise = new Promise<{ httpsServer: https.Server, httpServer: http.Server }>((resolve) => {
+const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: http.Server }> => {
+  return new Promise((resolve) => {
     const db = mongoose.connection;
     db.on("error", (error) => console.error(error));
     db.once("open", () => console.log("connected to database"));
+
     mongoose.connect(process.env.MONGO_URL).then(() => {
       const corsOptions = {
         origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE"],
       };
-    
+
       app.use(cors(corsOptions));
       app.use(bodyParser.urlencoded({ extended: true }));
       app.use(bodyParser.json());
       app.use(express.static(path.resolve('public')));
-      
+
       app.use("/api/auth", authRoute);
       app.use("/api/user", userRoute);
       app.use("/api/post", postRoute);
@@ -78,10 +79,9 @@ const init = () => {
       // Create HTTP server
       const httpServer = http.createServer(app);
 
-      resolve({ httpsServer, httpServer });
+      resolve({ app, httpsServer, httpServer });
     });
   });
-  return promise;
 };
 
-export default init;
+export { app, init };

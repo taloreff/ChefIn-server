@@ -1,4 +1,7 @@
-import init from "./app";
+import {init} from "./app";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 init().then(({ httpsServer, httpServer }) => {
   // Start HTTP server

@@ -1,110 +1,20 @@
-12.7.2024, 11:26:32 - ERROR - user is null 
-12.7.2024, 11:28:48 - ERROR - user is null 
-12.7.2024, 11:30:51 - ERROR - user is null 
-12.7.2024, 11:32:06 - ERROR - user is null 
-12.7.2024, 11:35:13 - ERROR - user is null 
-12.7.2024, 14:59:00 - ERROR - User does not exist 
-13.7.2024, 14:58:22 - ERROR - Invalid credentials 
-13.7.2024, 14:58:25 - ERROR - Invalid credentials 
-13.7.2024, 14:58:39 - ERROR - Invalid credentials 
-17.7.2024, 17:33:19 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 17:34:45 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 17:35:15 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 17:40:20 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 17:40:23 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:51:52 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:52:10 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:53:24 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:54:48 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:57:20 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 18:57:40 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 19:08:25 - ERROR - CastError: Cast to ObjectId failed for value "place-details" (type string) at path "_id" for model "Post" 
-17.7.2024, 19:19:05 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 19:21:43 - ERROR - TokenExpiredError: jwt expired 
-17.7.2024, 19:22:40 - ERROR - ValidationError: userId: Cast to ObjectId failed for value "" (type string) at path "userId" because of "BSONError", _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError", username: Path `username` is required. 
-17.7.2024, 19:24:40 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
-17.7.2024, 19:26:31 - ERROR - ValidationError: _id: Cast to ObjectId failed for value "" (type string) at path "_id" because of "BSONError" 
-18.7.2024, 0:20:20 - ERROR - TokenExpiredError: jwt expired 
-18.7.2024, 11:29:22 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 11:31:32 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 11:31:36 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 11:31:38 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 14:15:01 - ERROR - ValidationError: image: Path `image` is required. 
-19.7.2024, 14:15:14 - ERROR - ValidationError: image: Path `image` is required. 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:47 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:49 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:50 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:51 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 16:23:53 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:57 - ERROR - TokenExpiredError: jwt expired 
-19.7.2024, 18:02:59 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 17:34:33 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:10 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:24 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:29 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:29 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:29 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:30 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:31 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:31 - ERROR - TokenExpiredError: jwt expired 
-20.7.2024, 19:22:31 - ERROR - TokenExpiredError: jwt expired 
+20.7.2024, 20:00:26 - INFO - Registering user 
+20.7.2024, 20:02:44 - INFO - Registering user 
+20.7.2024, 20:02:45 - INFO - User 669bedb4d4c24cfd7ba0eb94 registered successfully 
+20.7.2024, 20:04:19 - INFO - Registering user 
+20.7.2024, 20:04:19 - INFO - User 669bee132f69086a19bea401 registered successfully 
+20.7.2024, 20:04:20 - ERROR - ValidationError: description: Path `description` is required., image: Path `image` is required., overview: Path `overview` is required. 
+20.7.2024, 20:16:57 - INFO - Registering user 
+20.7.2024, 20:16:57 - INFO - User 669bf109f1c9b03e46107077 registered successfully 
+20.7.2024, 20:16:58 - ERROR - ValidationError: reviews: Cast to embedded failed for value "test" (type string) at path "reviews" because of "ObjectParameterError" 
+20.7.2024, 20:36:00 - INFO - Registering user 
+20.7.2024, 20:36:00 - INFO - User 669bf580ce31285cc0fa8502 registered successfully 
+20.7.2024, 20:36:01 - ERROR - ValidationError: reviews: Cast to embedded failed for value "test" (type string) at path "reviews" because of "ObjectParameterError" 
+20.7.2024, 20:37:41 - INFO - Registering user 
+20.7.2024, 20:37:42 - INFO - User 669bf5e6e358761698c22eb6 registered successfully 
+20.7.2024, 20:37:43 - ERROR - ValidationError: reviews: Cast to embedded failed for value "test" (type string) at path "reviews" because of "ObjectParameterError" 
+20.7.2024, 20:40:55 - INFO - Registering user 
+20.7.2024, 20:40:56 - INFO - User 669bf6a8e9eb730bf2628469 registered successfully 
+20.7.2024, 20:42:22 - INFO - Registering user 
+20.7.2024, 20:42:23 - INFO - User 669bf6fe0ff5031d4c608467 registered successfully 
+20.7.2024, 20:42:30 - ERROR - TokenExpiredError: jwt expired 
