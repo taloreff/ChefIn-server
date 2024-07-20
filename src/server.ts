@@ -1,10 +1,17 @@
 import init from "./app";
 
-init().then((app) => {
-  
-  app.listen(process.env.PORT, () => {
+init().then(({ httpsServer, httpServer }) => {
+  // Start HTTP server
+  httpServer.listen(process.env.HTTP_PORT, () => {
     console.log(
-      "Server running at port " + process.env.PORT
+      "HTTP Server running at port " + process.env.HTTP_PORT
+    );
+  });
+
+  // Start HTTPS server
+  httpsServer.listen(process.env.HTTPS_PORT, () => {
+    console.log(
+      "HTTPS Server running at port " + process.env.HTTPS_PORT
     );
   });
 });
