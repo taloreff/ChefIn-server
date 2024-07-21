@@ -7,6 +7,21 @@ import { logger } from '../services/logger.service';
 
 export type AuthRequest = Request & { user: { _id: string } };
 
+const generateTokens = async (user: IUser & Document): Promise<{ accessToken: string, refreshToken: string } | null> => {
+    const accessToken = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET!, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
+    const refreshToken = jwt.sign({ _id: user._id }, process.env.REFRESH_TOKEN_SECRET!, { expiresIn: process.env.REFRESH_TOKEN_EXPIRATION });
+
+    user.tokens = user.tokens || [];
+    user.tokens.push(refreshToken);
+    try {
+        await user.save();
+        return { accessToken, refreshToken };
+    } catch (err) {
+        logger.error(err);
+        return null;
+    }
+};
+
 export const register = async (req: Request, res: Response) => {
     logger.info("Registering user");
     const { email, password, username } = req.body;
@@ -22,32 +37,15 @@ export const register = async (req: Request, res: Response) => {
       const hashedPassword = await bcrypt.hash(password, salt);
       const newUser = await User.create({ email, password: hashedPassword, username }) as IUser;
       
-      const accessToken = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET!, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
-      const refreshToken = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET!);
+      const tokens = await generateTokens(newUser);
+      if (!tokens) {
+          return res.status(400).send("Error generating tokens");
+      }
   
-      newUser.tokens = newUser.tokens || [];
-      newUser.tokens.push(refreshToken);
-      await newUser.save();
       logger.info(`User ${newUser._id} registered successfully`);
-      return res.status(200).send({ user: newUser, accessToken, refreshToken });
+      return res.status(200).send({ user: newUser, ...tokens });
     } catch (err) {
       return res.status(400).send(err.message);
-    }
-  };
-
-const generateTokens = async (user: IUser & Document): Promise<{ accessToken: string, refreshToken: string } | null> => {
-    const accessToken = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET!, { expiresIn: process.env.ACCESS_TOKEN_EXPIRATION });
-    const random = Math.floor(Math.random() * 1000000).toString();
-    const refreshToken = jwt.sign({ _id: user._id, random }, process.env.TOKEN_SECRET!);
-
-    user.tokens = user.tokens || [];
-    user.tokens.push(refreshToken);
-    try {
-        await user.save();
-        return { accessToken, refreshToken };
-    } catch (err) {
-        logger.error(err);
-        return null;
     }
 };
 
@@ -83,34 +81,36 @@ const login = async (req: Request, res: Response) => {
 };
 
 export const refresh = async (req: Request, res: Response) => {
-    const refreshToken = req.body.refreshToken;
+    const { refreshToken } = req.body;
     if (!refreshToken) {
-        return res.sendStatus(401);
+        return res.status(401).send("Refresh token not provided");
     }
+
     try {
-        jwt.verify(refreshToken, process.env.TOKEN_SECRET!, async (err, data: jwt.JwtPayload) => {
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async (err, data: jwt.JwtPayload) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.status(403).send("Invalid refresh token");
             }
             const user = await User.findOne({ _id: data._id }) as IUser & Document;
             if (!user || !user.tokens.includes(refreshToken)) {
-                return res.sendStatus(403);
+                return res.status(403).send("Invalid refresh token");
             }
+
+            // Remove the used refresh token from user's tokens array
             user.tokens = user.tokens.filter((token) => token !== refreshToken);
+
+            // Generate new tokens
             const tokens = await generateTokens(user);
             if (!tokens) {
-                logger.error("Error generating tokens");
-                return res.status(400).send("Error generating tokens");
+                return res.status(400).send("Error generating new tokens");
             }
+
             return res.status(200).send(tokens);
         });
     } catch (err) {
-        logger.error(err);
         return res.status(400).send(err.message);
     }
 };
-
-
 
 const extractToken = (req: Request): string | null => {
     const authHeader = req.headers['authorization'];
@@ -124,7 +124,7 @@ const logout = async (req: Request, res: Response) => {
         return res.sendStatus(401);
     }
     try {
-        jwt.verify(refreshToken, process.env.TOKEN_SECRET!, async (err, data: jwt.JwtPayload) => {
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async (err, data: jwt.JwtPayload) => {
             if (err) {
                 return res.sendStatus(403);
             }
@@ -147,7 +147,7 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     if (!token) {
         return res.status(401).json({ message: 'No token provided' });
     }
-    jwt.verify(token, process.env.TOKEN_SECRET!, (err, data: jwt.JwtPayload) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, data: jwt.JwtPayload) => {
         if (err) {
             logger.error(err);
             return res.sendStatus(401);

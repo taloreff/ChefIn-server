@@ -57,16 +57,26 @@ router.post("/login", AuthController.login);
 /**
  * @swagger
  * /auth/refresh:
- *   get:
+ *   post:
  *     summary: Refresh user token
  *     tags: [Auth]
+ *     requestBody:
+ *       description: Refresh token data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Token refreshed successfully
  *       401:
  *         description: Unauthorized
  */
-router.get("/refresh", AuthController.refresh);
+router.post("/refresh", AuthController.refresh);
 
 /**
  * @swagger
