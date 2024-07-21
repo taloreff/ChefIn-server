@@ -97,20 +97,4 @@ router.post("/", authMiddleware, userController.post.bind(userController));
  */
 router.put("/:id", authMiddleware, userController.put.bind(userController));
 
-/**
- * @swagger
- * /user:
- *   delete:
- *     summary: Delete a user
- *     tags: [User]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User deleted successfully
- *       401:
- *         description: Unauthorized
- */
-router.delete("/", authMiddleware, userController.delete.bind(userController));
-
 export default router;

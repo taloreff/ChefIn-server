@@ -21,9 +21,7 @@ class BaseController<ModelInterface> {
                 res.status(200).json(document);
             } else if (req.user) {
                 const userId = new Types.ObjectId(req.user._id);
-                console.log(`Searching for documents with userId: ${userId}`);
                 const documents = await this.model.find({ userId });
-                console.log(`Found documents: ${JSON.stringify(documents)}`);
                 res.status(200).json(documents);
             } else {
                 const filter = req.query as mongoose.FilterQuery<ModelInterface>;

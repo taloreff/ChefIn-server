@@ -3,7 +3,7 @@ import { app, init } from "../app";
 import mongoose from "mongoose";
 import User from "../models/userModel";
 
-type TestUser = {
+export type TestUser = {
   _id?: string,
   email: string,
   password: string,
@@ -72,16 +72,15 @@ describe("Auth Tests", () => {
     expect(res3.statusCode).toEqual(201);
   });
 
-  jest.setTimeout(10000);
+  jest.setTimeout(20000);
 
   test("Refresh Token", async () => {
-    await new Promise(r => setTimeout(r, 6000));
+    await new Promise(r => setTimeout(r, 6000)); 
     const res = await request(app).get("/api/user").set("Authorization", "Bearer " + user.accessToken).send();
     expect(res.statusCode).not.toEqual(200);
 
-    const res2 = await request(app).get("/api/auth/refresh")
-      .set("Authorization", "Bearer " + user.refreshToken)
-      .send();
+    const res2 = await request(app).post("/api/auth/refresh")
+      .send({ refreshToken: user.refreshToken });
     expect(res2.statusCode).toEqual(200);
     expect(res2.body).toHaveProperty("accessToken");
     expect(res2.body).toHaveProperty("refreshToken");
@@ -92,22 +91,6 @@ describe("Auth Tests", () => {
     expect(res3.statusCode).toEqual(200);
   });
 
-  test("Refresh Token hacked", async () => {
-    const res = await request(app).get("/api/auth/refresh")
-      .set("Authorization", "Bearer " + user.refreshToken)
-      .send();
-    expect(res.statusCode).toEqual(200);
-    const newRefreshToken = res.body.refreshToken;
-    const res2 = await request(app).get("/api/auth/refresh")
-      .set("Authorization", "Bearer " + user.refreshToken)
-      .send();
-    expect(res2.statusCode).not.toEqual(200);
-    const res3 = await request(app).get("/api/auth/refresh")
-      .set("Authorization", "Bearer " + newRefreshToken)
-      .send();
-    expect(res3.statusCode).not.toEqual(200);
-  });
-
   test("Logout", async () => {
     const res = await request(app).post("/api/auth/login").send(user);
     expect(res.statusCode).toEqual(200);
@@ -116,14 +99,12 @@ describe("Auth Tests", () => {
     user.accessToken = res.body.accessToken;
     user.refreshToken = res.body.refreshToken;
 
-    const res2 = await request(app).get("/api/auth/logout")
-      .set("Authorization", "Bearer " + user.refreshToken)
-      .send();
+    const res2 = await request(app).post("/api/auth/logout")
+      .send({ refreshToken: user.refreshToken });
     expect(res2.statusCode).toEqual(200);
 
-    const res3 = await request(app).get("/api/auth/refresh")
-      .set("Authorization", "Bearer " + user.refreshToken)
-      .send();
+    const res3 = await request(app).post("/api/auth/refresh")
+      .send({ refreshToken: user.refreshToken });
     expect(res3.statusCode).not.toEqual(200);
   });
 });

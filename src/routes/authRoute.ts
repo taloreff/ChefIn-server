@@ -90,6 +90,6 @@ router.post("/refresh", AuthController.refresh);
  *       401:
  *         description: Unauthorized
  */
-router.get("/logout", AuthController.logout);
+router.post("/logout", AuthController.logout);
 
 export default router;

@@ -77,10 +77,8 @@ class PostController extends BaseController<IPost> {
         }
         const apiKey = 'AIzaSyB24fmoFy0PfYJeqW1F7Ida3Ok3IlwDZUw';
         try {
-            console.log("fetching place details")
             const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${apiKey}`);
             const data = await response.json();
-            console.log("place details fetched ", data)
             res.json(data);
         } catch (error) {
             logger.error(error);

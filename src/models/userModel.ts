@@ -26,9 +26,10 @@ const UserSchema: Schema = new Schema({
         type: String,
         required: false,
     },
-    tokens: {
-        type: [String],
-    },
+    tokens: [{
+        type: String,
+        unique: true  
+      }],
 });
 
 export default mongoose.model<IUser>('User', UserSchema);

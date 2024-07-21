@@ -21,7 +21,6 @@ const generateTokens = async (user: IUser & Document): Promise<{ accessToken: st
         return null;
     }
 };
-
 export const register = async (req: Request, res: Response) => {
     logger.info("Registering user");
     const { email, password, username } = req.body;
@@ -87,39 +86,36 @@ export const refresh = async (req: Request, res: Response) => {
     }
 
     try {
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!, async (err, data: jwt.JwtPayload) => {
-            if (err) {
-                return res.status(403).send("Invalid refresh token");
-            }
-            const user = await User.findOne({ _id: data._id }) as IUser & Document;
-            if (!user || !user.tokens.includes(refreshToken)) {
-                return res.status(403).send("Invalid refresh token");
-            }
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET!) as jwt.JwtPayload;
+        const user = await User.findOne({ _id: decoded._id }) as IUser & Document;
 
-            // Remove the used refresh token from user's tokens array
-            user.tokens = user.tokens.filter((token) => token !== refreshToken);
+        if (!user || !user.tokens.includes(refreshToken)) {
+            return res.status(403).send("Invalid refresh token");
+        }
 
-            // Generate new tokens
-            const tokens = await generateTokens(user);
-            if (!tokens) {
-                return res.status(400).send("Error generating new tokens");
-            }
+        // Remove the used refresh token from user's tokens array
+        user.tokens = user.tokens.filter((token) => token !== refreshToken);
 
-            return res.status(200).send(tokens);
-        });
+        // Save the updated user with the old token removed
+        await user.save();
+
+        // Generate new tokens
+        const newTokens = await generateTokens(user);
+        if (!newTokens) {
+            return res.status(400).send("Error generating new tokens");
+        }
+
+        return res.status(200).send(newTokens);
     } catch (err) {
+        if (err instanceof jwt.JsonWebTokenError) {
+            return res.status(403).send("Invalid refresh token");
+        }
         return res.status(400).send(err.message);
     }
 };
 
-const extractToken = (req: Request): string | null => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    return token || null;
-};
-
 const logout = async (req: Request, res: Response) => {
-    const refreshToken = extractToken(req);
+    const { refreshToken } = req.body;
     if (!refreshToken) {
         return res.sendStatus(401);
     }
@@ -140,6 +136,14 @@ const logout = async (req: Request, res: Response) => {
         logger.error(err);
         return res.status(400).send(err.message);
     }
+};
+
+
+
+const extractToken = (req: Request): string | null => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    return token || null;
 };
 
 export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
