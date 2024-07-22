@@ -1,11 +1,9 @@
-// post.test.ts
-
 import request from 'supertest';
 import { app, init } from '../app';
 import mongoose from 'mongoose';
-import Post from '../models/postModel';
 import User from '../models/userModel';
-import { TestUser } from './auth.test'; // Assuming you have this type exported from auth.test
+import { TestUser } from './auth.test';
+import nock from 'nock';
 
 let user: TestUser = {
   email: 'test@test.com',
@@ -25,6 +23,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  // Properly close the connection
   await mongoose.connection.close();
 });
 
@@ -60,6 +59,24 @@ describe('Post API Tests', () => {
     postId = res.body._id;
   });
 
+  test('Create Post with Invalid Data', async () => {
+    const invalidPost = { /* missing required fields */ };
+    const res = await request(app)
+      .post('/api/post')
+      .set('Authorization', `Bearer ${user.accessToken}`)
+      .send(invalidPost);
+    expect(res.statusCode).toEqual(500); 
+  });
+  
+  test('Get Non-existent Post', async () => {
+    const fakeId = '5f8d0f5d7925b53e6b6f0f0f'; // A non-existent ID
+    const res = await request(app)
+      .get(`/api/post/${fakeId}`)
+      .set('Authorization', `Bearer ${user.accessToken}`)
+      .send();
+    expect(res.statusCode).toEqual(404);
+  });
+
   test('Get Post by ID', async () => {
     const res = await request(app)
       .get(`/api/post/${postId}`)
@@ -79,6 +96,31 @@ describe('Post API Tests', () => {
     expect(res.body).toBeInstanceOf(Array);
     expect(res.body[0]).toHaveProperty('userId');
     expect(res.body[0].userId).toEqual(user._id);
+  });
+
+  test('Get All Posts', async () => {
+    const res = await request(app)
+      .get('/api/post')
+      .set('Authorization', `Bearer ${user.accessToken}`)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toBeInstanceOf(Array);
+  });
+
+  test('Add Review to Post', async () => {
+    const reviewPayload = {
+      rating: 4,
+      comment: 'Great food!',
+    };
+
+    const res = await request(app)
+      .put(`/api/post/${postId}/review`)
+      .set('Authorization', `Bearer ${user.accessToken}`)
+      .send(reviewPayload);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.reviews).toBeInstanceOf(Array);
+    expect(res.body.reviews[res.body.reviews.length - 1]).toHaveProperty('rating', 4);
+    expect(res.body.reviews[res.body.reviews.length - 1]).toHaveProperty('comment', 'Great food!');
   });
 
   test('Update Post', async () => {
@@ -125,5 +167,21 @@ describe('Post API Tests', () => {
       .set('Authorization', `Bearer ${user.accessToken}`)
       .send();
     expect(getRes.statusCode).toEqual(404);
+  });
+
+  test('Get Place Details', async () => {
+    // Mock the Google Places API request
+    nock('https://maps.googleapis.com')
+      .get('/maps/api/place/details/json')
+      .query({ placeid: 'ChIJN1t_tDeuEmsRUsoyG83frY4', key: 'AIzaSyB24fmoFy0PfYJeqW1F7Ida3Ok3IlwDZUw' })
+      .reply(200, { result: { name: 'Test Place', formatted_address: '123 Test St' } });
+
+    const res = await request(app)
+      .get('/api/post/place-details')
+      .query({ placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4' })
+      .set('Authorization', `Bearer ${user.accessToken}`)
+      .send();
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('result');
   });
 });
