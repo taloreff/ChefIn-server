@@ -92,4 +92,28 @@ router.post("/refresh", AuthController.refresh);
  */
 router.post("/logout", AuthController.logout);
 
+/**
+ * @swagger
+ * /auth/google:
+ *   post:
+ *     summary: Google login
+ *     tags: [Auth]
+ *     requestBody:
+ *       description: Google credential data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               credential:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.post("/google", AuthController.googleLogin);
+
 export default router;

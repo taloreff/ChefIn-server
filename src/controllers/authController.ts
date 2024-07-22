@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 import { logger } from '../services/logger.service';
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export type AuthRequest = Request & { user: { _id: string } };
 
@@ -21,6 +24,7 @@ const generateTokens = async (user: IUser & Document): Promise<{ accessToken: st
         return null;
     }
 };
+
 export const register = async (req: Request, res: Response) => {
     logger.info("Registering user");
     const { email, password, username } = req.body;
@@ -76,6 +80,43 @@ const login = async (req: Request, res: Response) => {
     } catch (err) {
         logger.error(err);
         return res.status(400).send(err.message);
+    }
+};
+
+export const googleLogin = async (req: Request, res: Response) => {
+    const { credential } = req.body;
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        if (!payload || !payload.email) {
+            logger.error("Invalid Google token");
+            return res.status(400).send("Invalid Google token");
+        }
+        console.log("payload", payload);
+
+        let user = await User.findOne({ email: payload.email });
+        if (!user) {
+            user = await User.create({
+                email: payload.email,
+                username: payload.name || payload.email,
+                profileImgUrl: payload.picture,
+                password: 'google-signin'
+            });
+        }
+
+        const tokens = await generateTokens(user);
+        if (!tokens) {
+            logger.error("Error generating tokens");
+            return res.status(400).send("Error generating tokens");
+        }
+
+        return res.status(200).send({ user, ...tokens });
+    } catch (err) {
+        logger.error(err);
+        return res.status(400).send("Error logging in with Google");
     }
 };
 
@@ -161,4 +202,4 @@ export const authMiddleware = async (req: AuthRequest, res: Response, next: Next
     });
 };
 
-export default { register, login, logout, authMiddleware, refresh };
+export default { register, login, googleLogin, logout, authMiddleware, refresh };
