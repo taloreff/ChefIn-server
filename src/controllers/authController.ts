@@ -190,10 +190,12 @@ const extractToken = (req: Request): string | null => {
 export const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const token = extractToken(req);
     if (!token) {
+        console.log("No token provided");
         return res.status(401).json({ message: 'No token provided' });
     }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!, (err, data: jwt.JwtPayload) => {
         if (err) {
+            console.log("error", err);
             logger.error(err);
             return res.sendStatus(401);
         }

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import mongoose, { Types } from "mongoose";
 import { logger } from "../services/logger.service";
 import { AuthRequest } from "../controllers/authController"; 
+import upload from "../config/multerConfig"; 
 
 class BaseController<ModelInterface> {
     model: mongoose.Model<ModelInterface>;
@@ -46,19 +47,26 @@ class BaseController<ModelInterface> {
     }
 
     async put(req: AuthRequest, res: Response): Promise<void> {
-        const document = req.body;
         try {
-            const updatedDocument = await this.model.findByIdAndUpdate(
-                document._id,
-                document,
-                { new: true }
-            );
-            res.status(200).json(updatedDocument);
+          const { id } = req.params;
+          const updateData = { ...req.body };
+          
+          if (req.file) {
+            updateData.image = req.file.filename;
+          }
+          
+          console.log("1. updatedData", updateData);
+          const updatedDocument = await this.model.findByIdAndUpdate(id, updateData, { new: true });
+          if (!updatedDocument) {
+            res.status(404).send('Document not found');
+          }
+          console.log("2. updatedDocument", updatedDocument);
+          res.status(200).json(updatedDocument);
         } catch (err) {
-            logger.error(err);
-            res.status(500).send(err.message);
+          logger.error(err);
+          res.status(500).send(err.message);
         }
-    }
+      }
 
     async delete(req: AuthRequest, res: Response): Promise<void> {
         const { id } = req.params;

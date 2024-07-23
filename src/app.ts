@@ -1,3 +1,5 @@
+// app.ts
+
 import express, { Express } from "express";
 import https from 'https';
 import http from 'http';
@@ -17,6 +19,8 @@ env.config();
 
 const app: Express = express();
 
+
+
 const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: http.Server }> => {
   return new Promise((resolve) => {
     const db = mongoose.connection;
@@ -27,6 +31,8 @@ const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: 
       const corsOptions = {
         origin: "*",
         methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization", "Origin", "X-Requested-With", "Accept", "headers"],
+        credentials: true,
       };
 
       app.use(cors(corsOptions));
@@ -57,6 +63,8 @@ const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: 
       };
       const specs = swaggerJsdoc(options);
       app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
+      app.use('/uploads', express.static('uploads'));
 
       app.get("/**", (req, res) => {
         res.sendFile(path.resolve('public/index.html'));

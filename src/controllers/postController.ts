@@ -4,6 +4,9 @@ import { Response, Request } from "express";
 import { AuthRequest } from "./authController";
 import User from "../models/userModel";
 import { logger } from "../services/logger.service";
+import upload from "../config/multerConfig"; 
+import path from "path";
+import fs from "fs";
 
 class PostController extends BaseController<IPost> {
     constructor() {
@@ -11,20 +14,40 @@ class PostController extends BaseController<IPost> {
     }
 
     async post(req: AuthRequest, res: Response): Promise<void> {
-        try {
-            const { title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded } = req.body;
-            const userId = req.user._id;
+        upload.single('image')(req, res, async (err: any) => {
+            if (err) {
+                logger.error(err);
+                return res.status(500).send({ message: 'Error uploading image' });
+            }
 
-            const newPost = await this.model.create({
-                userId: userId,
-                title, description, image, reviews, overview, meetingPoint, labels, whatsIncluded
-            });
-            res.status(201).json(newPost);
-        } catch (err) {
-            logger.error(err);
-            res.status(500).send(err.message);
-        }
+            try {
+                const { title, description, overview, meetingPoint, labels, whatsIncluded, reviews } = req.body;
+                const userId = req.user._id;
+                const image = req.file ? req.file.filename : undefined;
+
+                const parsedLabels = Array.isArray(labels) ? labels : JSON.parse(labels);
+                const parsedWhatsIncluded = Array.isArray(whatsIncluded) ? whatsIncluded : JSON.parse(whatsIncluded);
+                const parsedReviews = Array.isArray(reviews) ? reviews.map((r) => JSON.parse(r)) : [];
+
+                const newPost = await this.model.create({
+                    userId,
+                    title,
+                    description,
+                    image,
+                    reviews: parsedReviews,
+                    overview,
+                    meetingPoint: meetingPoint ? JSON.parse(meetingPoint) : {},
+                    labels: parsedLabels,
+                    whatsIncluded: parsedWhatsIncluded
+                });
+                res.status(201).json(newPost);
+            } catch (err) {
+                logger.error(err);
+                res.status(500).send(err.message);
+            }
+        });
     }
+    
 
     async addReview(req: AuthRequest, res: Response): Promise<void> {
         try {

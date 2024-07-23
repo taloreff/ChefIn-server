@@ -2,6 +2,8 @@ import express from "express";
 const router = express.Router();
 import PostController from "../controllers/postController";
 import { authMiddleware } from "../controllers/authController";
+import upload from "../config/multerConfig";
+import postController from "../controllers/postController";
 
 /**
  * @swagger
@@ -124,7 +126,7 @@ router.post("/", authMiddleware, PostController.post.bind(PostController));
  *       401:
  *         description: Unauthorized
  */
-router.put("/:id/review", authMiddleware, PostController.addReview.bind(PostController));
+router.put("/:id", authMiddleware, upload.single('image'), postController.put.bind(postController));
 
 /**
  * @swagger
