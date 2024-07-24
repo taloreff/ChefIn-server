@@ -48,25 +48,30 @@ class BaseController<ModelInterface> {
 
     async put(req: AuthRequest, res: Response): Promise<void> {
         try {
-          const { id } = req.params;
-          const updateData = { ...req.body };
-          
-          if (req.file) {
-            updateData.image = req.file.filename;
-          }
-          
-          console.log("1. updatedData", updateData);
-          const updatedDocument = await this.model.findByIdAndUpdate(id, updateData, { new: true });
-          if (!updatedDocument) {
-            res.status(404).send('Document not found');
-          }
-          console.log("2. updatedDocument", updatedDocument);
-          res.status(200).json(updatedDocument);
+            const { id } = req.params;
+            const updateData = { ...req.body };
+    
+            if (typeof updateData.meetingPoint === 'string') {
+                updateData.meetingPoint = JSON.parse(updateData.meetingPoint);
+            }
+    
+            if (req.file) {
+                updateData.image = req.file.filename;
+            }
+    
+            console.log("1. updatedData", updateData);
+            const updatedDocument = await this.model.findByIdAndUpdate(id, updateData, { new: true });
+            if (!updatedDocument) {
+                res.status(404).send('Document not found');
+            }
+            console.log("2. updatedDocument", updatedDocument);
+            res.status(200).json(updatedDocument);
         } catch (err) {
-          logger.error(err);
-          res.status(500).send(err.message);
+            logger.error(err);
+            res.status(500).send(err.message);
         }
-      }
+    }
+    
 
     async delete(req: AuthRequest, res: Response): Promise<void> {
         const { id } = req.params;

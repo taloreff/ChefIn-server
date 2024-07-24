@@ -52,6 +52,7 @@ class PostController extends BaseController<IPost> {
     async addReview(req: AuthRequest, res: Response): Promise<void> {
         try {
             const postId = req.params.id;
+            console.log("adding review...")
             const post = await this.model.findById(postId);
             if (!post) {
                 res.status(404).send("Post not found");

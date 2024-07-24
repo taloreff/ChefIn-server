@@ -156,7 +156,7 @@ router.put("/:id", authMiddleware, upload.single('image'), postController.put.bi
  *       401:
  *         description: Unauthorized
  */
-router.put("/:id", authMiddleware, PostController.put.bind(PostController));
+router.put("/:id/review", authMiddleware, PostController.addReview.bind(PostController));
 
 /**
  * @swagger
