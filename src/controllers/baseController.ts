@@ -50,9 +50,17 @@ class BaseController<ModelInterface> {
         try {
             const { id } = req.params;
             const updateData = { ...req.body };
-    
+            
             if (typeof updateData.meetingPoint === 'string') {
                 updateData.meetingPoint = JSON.parse(updateData.meetingPoint);
+            }
+            
+            if (typeof updateData.reviews === 'string') {
+                updateData.reviews = JSON.parse(updateData.reviews);
+            } else if (Array.isArray(updateData.reviews)) {
+                updateData.reviews = updateData.reviews.map((review) => 
+                    typeof review === 'string' ? JSON.parse(review) : review
+                );
             }
     
             if (req.file) {
@@ -63,6 +71,7 @@ class BaseController<ModelInterface> {
             const updatedDocument = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             if (!updatedDocument) {
                 res.status(404).send('Document not found');
+                return;
             }
             console.log("2. updatedDocument", updatedDocument);
             res.status(200).json(updatedDocument);
@@ -71,6 +80,7 @@ class BaseController<ModelInterface> {
             res.status(500).send(err.message);
         }
     }
+    
     
 
     async delete(req: AuthRequest, res: Response): Promise<void> {

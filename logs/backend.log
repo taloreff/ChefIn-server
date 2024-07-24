@@ -523,3 +523,42 @@
 24.7.2024, 10:59:51 - ERROR - TokenExpiredError: jwt expired 
 24.7.2024, 11:04:58 - INFO - Registering user 
 24.7.2024, 11:04:58 - INFO - User 66a0b5aa39bc51a99f1d34d6 registered successfully 
+24.7.2024, 11:19:58 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 11:22:42 - ERROR - SyntaxError: "undefined" is not valid JSON 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 13:32:41 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 14:32:17 - ERROR - CastError: Cast to embedded failed for value "{"user":"Tal Oreff","rating":4,"comment":"Good food","_id":"66a0b4a539bc51a99f1d3430"}" (type string) at path "reviews" because of "ObjectParameterError" 
+24.7.2024, 14:32:24 - ERROR - CastError: Cast to embedded failed for value "{"user":"Tal Oreff","rating":4,"comment":"Good food","_id":"66a0b4a539bc51a99f1d3430"}" (type string) at path "reviews" because of "ObjectParameterError" 
+24.7.2024, 14:32:59 - ERROR - CastError: Cast to embedded failed for value "{"user":"Tal Oreff","rating":4,"comment":"Good food","_id":"66a0b4a539bc51a99f1d3430"}" (type string) at path "reviews" because of "ObjectParameterError" 
+24.7.2024, 14:34:54 - ERROR - CastError: Cast to embedded failed for value "{"user":"Tal Oreff","rating":4,"comment":"Good food","_id":"66a0b4a539bc51a99f1d3430"}" (type string) at path "reviews" because of "ObjectParameterError" 
+24.7.2024, 14:36:04 - ERROR - CastError: Cast to embedded failed for value "{"user":"Tal Oreff","rating":4,"comment":"Good food","_id":"66a0b4a539bc51a99f1d3430"}" (type string) at path "reviews" because of "ObjectParameterError" 
+24.7.2024, 14:39:16 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 14:41:04 - ERROR - MulterError: File too large 
+24.7.2024, 15:08:45 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:45 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:45 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
+24.7.2024, 15:08:46 - ERROR - TokenExpiredError: jwt expired 
