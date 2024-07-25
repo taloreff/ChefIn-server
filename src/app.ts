@@ -55,7 +55,7 @@ const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: 
           },
           servers: [
             {
-              url: `http://localhost:${process.env.HTTP_PORT}/api`,
+              url: `http://node01.cs.colman.ac.il:${process.env.HTTP_PORT}/api`,
             },
           ],
         },
