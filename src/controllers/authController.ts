@@ -91,11 +91,12 @@ export const googleLogin = async (req: Request, res: Response) => {
             audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
+        console.log("payload", payload);
         if (!payload || !payload.email) {
+            console.log("Invalid Google token")
             logger.error("Invalid Google token");
             return res.status(400).send("Invalid Google token");
         }
-        console.log("payload", payload);
 
         let user = await User.findOne({ email: payload.email });
         if (!user) {

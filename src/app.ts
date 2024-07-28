@@ -14,6 +14,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import fs from "fs";
 
 env.config();
 
@@ -70,18 +71,14 @@ const init = (): Promise<{ app: Express, httpsServer: https.Server, httpServer: 
         res.sendFile(path.resolve('public/index.html'));
       });
 
-      // Generate self-signed certificate
-      const pems = selfsigned.generate(null, {
-        algorithm: 'sha256',
-        days: 30,
-        keySize: 2048,
-        extensions: [{ name: 'basicConstraints', cA: true }]
-      });
+      // Read certificate and key files
+      const key = fs.readFileSync(path.resolve('node01.cs.colman.ac.il.key'));
+      const cert = fs.readFileSync(path.resolve('node01.cs.colman.ac.il.crt'));
 
       // Create HTTPS server
       const httpsServer = https.createServer({
-        key: pems.private,
-        cert: pems.cert
+        key: key,
+        cert: cert
       }, app);
 
       // Create HTTP server
