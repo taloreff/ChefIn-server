@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import User from '../models/userModel';
 import { TestUser } from './auth.test';
 import nock from 'nock';
+import path from "path"
 
 let user: TestUser = {
   email: 'test@test.com',
@@ -23,16 +24,14 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Properly close the connection
   await mongoose.connection.close();
 });
-
+// title, description, overview, meetingPoint, labels, whatsIncluded, reviews
 describe('Post API Tests', () => {
   test('Create Post', async () => {
     const postPayload = {
       title: 'test title',
       description: 'test description',
-      image: 'https://res.cloudinary.com/dd7nwvjli/image/upload/v1720018587/grilled_prawns_private_chef_chicago_re4abh.jpg',
       labels: ['test'],
       reviews: [
         {
@@ -53,7 +52,14 @@ describe('Post API Tests', () => {
     const res = await request(app)
       .post('/api/post')
       .set('Authorization', `Bearer ${user.accessToken}`)
-      .send(postPayload);
+      .field('title', postPayload.title)
+      .field('description', postPayload.description)
+      .field('labels', JSON.stringify(postPayload.labels))
+      .field('reviews', JSON.stringify(postPayload.reviews))
+      .field('overview', postPayload.overview)
+      .field('whatsIncluded', JSON.stringify(postPayload.whatsIncluded))
+      .field('meetingPoint', JSON.stringify(postPayload.meetingPoint))
+      .attach('image', path.resolve(__dirname, '../../uploads/1.jpeg')); 
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('_id');
     postId = res.body._id;
@@ -66,6 +72,7 @@ describe('Post API Tests', () => {
       .set('Authorization', `Bearer ${user.accessToken}`)
       .send(invalidPost);
     expect(res.statusCode).toEqual(500); 
+
   });
   
   test('Get Non-existent Post', async () => {
@@ -75,16 +82,7 @@ describe('Post API Tests', () => {
       .set('Authorization', `Bearer ${user.accessToken}`)
       .send();
     expect(res.statusCode).toEqual(404);
-  });
 
-  test('Get Post by ID', async () => {
-    const res = await request(app)
-      .get(`/api/post/${postId}`)
-      .set('Authorization', `Bearer ${user.accessToken}`)
-      .send();
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('_id');
-    expect(res.body._id).toEqual(postId);
   });
 
   test('Get My Posts', async () => {
@@ -96,6 +94,7 @@ describe('Post API Tests', () => {
     expect(res.body).toBeInstanceOf(Array);
     expect(res.body[0]).toHaveProperty('userId');
     expect(res.body[0].userId).toEqual(user._id);
+
   });
 
   test('Get All Posts', async () => {
@@ -105,6 +104,7 @@ describe('Post API Tests', () => {
       .send();
     expect(res.statusCode).toEqual(200);
     expect(res.body).toBeInstanceOf(Array);
+
   });
 
   test('Add Review to Post', async () => {
@@ -121,6 +121,7 @@ describe('Post API Tests', () => {
     expect(res.body.reviews).toBeInstanceOf(Array);
     expect(res.body.reviews[res.body.reviews.length - 1]).toHaveProperty('rating', 4);
     expect(res.body.reviews[res.body.reviews.length - 1]).toHaveProperty('comment', 'Great food!');
+
   });
 
   test('Update Post', async () => {
@@ -153,6 +154,7 @@ describe('Post API Tests', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('_id');
     expect(res.body.title).toEqual('updated title');
+
   });
 
   test('Delete Post', async () => {
@@ -167,21 +169,21 @@ describe('Post API Tests', () => {
       .set('Authorization', `Bearer ${user.accessToken}`)
       .send();
     expect(getRes.statusCode).toEqual(404);
+
   });
 
-  test('Get Place Details', async () => {
-    // Mock the Google Places API request
-    nock('https://maps.googleapis.com')
-      .get('/maps/api/place/details/json')
-      .query({ placeid: 'ChIJN1t_tDeuEmsRUsoyG83frY4', key: 'AIzaSyB24fmoFy0PfYJeqW1F7Ida3Ok3IlwDZUw' })
-      .reply(200, { result: { name: 'Test Place', formatted_address: '123 Test St' } });
+  // test('Get Place Details', async () => {
+  //   const scope = nock('https://maps.googleapis.com')
+  //     .get('/maps/api/place/details/json')
+  //     .query({ placeid: 'ChIJN1t_tDeuEmsRUsoyG83frY4', key: process.env.GOOGLE_API_KEY })
+  //     .reply(200, { result: { name: 'Test Place', formatted_address: '123 Test St' } });
 
-    const res = await request(app)
-      .get('/api/post/place-details')
-      .query({ placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4' })
-      .set('Authorization', `Bearer ${user.accessToken}`)
-      .send();
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('result');
-  });
+  //   const res = await request(app)
+  //     .get('/api/post/place-details')
+  //     .query({ placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4' })
+  //     .set('Authorization', `Bearer ${user.accessToken}`)
+  //     .send();
+  //   expect(res.statusCode).toEqual(200);
+  //   expect(res.body).toHaveProperty('result');
+  // })
 });

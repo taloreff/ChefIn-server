@@ -30,7 +30,6 @@ afterAll(async () => {
 describe("Auth Tests", () => {
   test("Register", async () => {
     const res = await request(app).post("/api/auth/register").send(user);
-    console.log(res.body);
     user._id = res.body.user._id;
     expect(res.statusCode).toEqual(200);
   });
@@ -51,28 +50,9 @@ describe("Auth Tests", () => {
     const res2 = await request(app).get("/api/user").set("Authorization", "Bearer " + user.accessToken).send();
     expect(res2.statusCode).toEqual(200);
 
-    const res3 = await request(app).post("/api/post").set("Authorization", "Bearer " + user.accessToken).send({
-      userId: user._id,
-      title: "test title",
-      description: "test description",
-      image: "https://res.cloudinary.com/dd7nwvjli/image/upload/v1720018587/grilled_prawns_private_chef_chicago_re4abh.jpg",
-      labels: ["test"],
-      reviews: [{
-        user: "Alice Johnson",
-        rating:5,
-        comment:"Amazing food and great service!"}],
-      overview: "test overview",
-      whatsIncluded: ["test whatsincluded"],
-      meetingPoint: {
-        address: "test address",
-        lat: 41.8781,
-        lng: -87.6298
-      }
-    });
-    expect(res3.statusCode).toEqual(201);
   });
 
-  jest.setTimeout(20000);
+  jest.setTimeout(10000);
 
   test("Refresh Token", async () => {
     await new Promise(r => setTimeout(r, 6000)); 
@@ -89,6 +69,7 @@ describe("Auth Tests", () => {
 
     const res3 = await request(app).get("/api/user").set("Authorization", "Bearer " + user.accessToken).send();
     expect(res3.statusCode).toEqual(200);
+
   });
 
   test("Logout", async () => {

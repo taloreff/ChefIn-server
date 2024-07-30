@@ -55,8 +55,8 @@ describe('User API Tests', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('username', updatedUser.username);
 
-    // Update user object for further tests
     user.email = updatedUser.email;
     user.username = updatedUser.username;
+
   });
 });

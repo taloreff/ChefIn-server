@@ -16,10 +16,8 @@ class PostController extends BaseController<IPost> {
     async post(req: AuthRequest, res: Response): Promise<void> {
         upload.single('image')(req, res, async (err: any) => {
             if (err) {
-                logger.error(err);
                 return res.status(500).send({ message: 'Error uploading image' });
             }
-
             try {
                 const { title, description, overview, meetingPoint, labels, whatsIncluded, reviews } = req.body;
                 const userId = req.user._id;
@@ -52,7 +50,6 @@ class PostController extends BaseController<IPost> {
     async addReview(req: AuthRequest, res: Response): Promise<void> {
         try {
             const postId = req.params.id;
-            console.log("adding review...")
             const post = await this.model.findById(postId);
             if (!post) {
                 res.status(404).send("Post not found");
@@ -99,7 +96,7 @@ class PostController extends BaseController<IPost> {
             res.status(400).send('placeId query parameter is required');
             return;
         }
-        const apiKey = 'AIzaSyB24fmoFy0PfYJeqW1F7Ida3Ok3IlwDZUw';
+        const apiKey = process.env.GOOGLE_API_KEY;
         try {
             const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=${apiKey}`);
             const data = await response.json();

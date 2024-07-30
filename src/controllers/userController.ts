@@ -4,7 +4,7 @@ import User, { IUser } from "../models/userModel";
 import BaseController from "./baseController";
 import { Request, Response } from "express";
 import { logger } from "../services/logger.service";
-import upload from "../config/multerConfig"; // Import multer configuration
+import upload from "../config/multerConfig";
 
 class UserController extends BaseController<IUser> {
     constructor() {
@@ -22,7 +22,6 @@ class UserController extends BaseController<IUser> {
             const userId = req.params.id;
             const profileImgUrl = req.file ? req.file.filename : undefined;
 
-            console.log("profileImgUrl", profileImgUrl);
             const updateData: Partial<IUser> = {
                 username,
             };

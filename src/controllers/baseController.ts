@@ -67,13 +67,11 @@ class BaseController<ModelInterface> {
                 updateData.image = req.file.filename;
             }
     
-            console.log("1. updatedData", updateData);
             const updatedDocument = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             if (!updatedDocument) {
                 res.status(404).send('Document not found');
                 return;
             }
-            console.log("2. updatedDocument", updatedDocument);
             res.status(200).json(updatedDocument);
         } catch (err) {
             logger.error(err);
@@ -90,7 +88,7 @@ class BaseController<ModelInterface> {
             res.status(200).send();
         } catch (err) {
             logger.error(err);
-            res.status(500).send(err.message);
+            res.status(404).send(err.message);
         }
     }
 }

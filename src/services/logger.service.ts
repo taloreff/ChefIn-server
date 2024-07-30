@@ -22,7 +22,6 @@ function doLog(level: string, ...args: any[]): void {
 
     let line = strs.join(' | ');
     line = `${getTime()} - ${level} - ${line} \n`;
-    console.log(line);
     fs.appendFile('./logs/backend.log', line, (err) => {
         if (err) console.log('FATAL: cannot write to log file');
     });
